@@ -1,27 +1,40 @@
 # docker-arm
-A Dockerfile and script for compiling, running and debugging ARM programs.
+This is a Dockerfile that contains tools to compile, run and debug
+ARM programs. More specifically, it contains the GCC toolchain for ARM,
+gdb-multiarch and qemu.
 
 ## Building the image
-`docker build . -t xshill/arm`
+Use the following command to build the image:
+
+```
+sudo docker build . -t xshill/arm --build-arg UID=<MY_UID>
+```
+
+Replace `<MY_UID>` with your own user ID. If you don't know it, you can use the following linux command to find it:
+
+```
+id -u
+```
+
+The UID parameter is used to create an internal container user that has the same permissions as your current user.
 
 ## Running
-Running `./docker-arm.sh` will call `docker run` on the image with the following arguments:
+Use `docker run -it xshill/arm` to launch the container. This will drop
+you in an interactive bash session where you can use the tools. The working directory is `/work`.
 
-`--rm -it -v $(pwd):/work -u $UID:$UID`
+### Using external files
+You will most likely
+want to access files that are outside of the container. To achieve this, you can use the `-v` flag to create a volume (a folder shared between your host and your container). For example:
 
-Any arguments you pass to the script will be passed to `docker run` in addition to the default arguments.
-For example, to forward port 1234, you can run:
+```
+sudo docker run -it -v /tmp/my_arm_files:/work xshill/arm
+```
 
-`./docker-arm.sh -p 1234:1234`
-
-Running the script will run bash on the container in `/work`, which is a volume for the working directory of the host.
+This will create a container with a link from the `/work` folder in the container to the `/tmp/my_arm_files` folder on the host.
 
 ## Aliases
-There is a file at `/aliases` on the image that you can source. It contains the following aliases:
-
-* `cc`: alias for `arm-linux-gnueabi-gcc`
-* `cchf`: alias for `arm-linux-gnueabihf-gcc`
-* `run`: alias for `qemu-arm -L /usr/arm-linux-gnueabi`
-* `runhf`: alias for `qemu-arm -L /usr/arm-linux-gnueabihf`
-
-It is not sourced by default. You need to source it yourself.
+The following aliases are available to the container user:
+* `cc`: compile program for ARM using gcc
+* `cchf`: compile program for ARMHF using gcc
+* `run`: run ARM programs using qemu
+* `runhf`: run ARMHF programs using qemu

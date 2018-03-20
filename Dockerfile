@@ -1,4 +1,5 @@
 FROM ubuntu:16.04
+
 RUN apt-get update && apt-get -y install \
     gcc-arm-linux-gnueabi \
     gcc-arm-linux-gnueabihf \
@@ -7,9 +8,14 @@ RUN apt-get update && apt-get -y install \
     qemu \
     qemu-user
 
-RUN echo 'alias cc="arm-linux-gnueabi-gcc"' >> /aliases && \
-    echo 'alias cchf="arm-linux-gnueabihf-gcc"' >> /aliases && \
-    echo 'alias run="qemu-arm -L /usr/arm-linux-gnueabi"' >> /aliases && \
-    echo 'alias runhf="qemu-arm -L /usr/arm-linux-gnueabihf"' >> /aliases
+ARG UID
+RUN useradd -u $UID armuser -m
+
+USER armuser
+
+RUN echo 'alias cc="arm-linux-gnueabi-gcc"' >> /home/armuser/.bashrc && \
+    echo 'alias cchf="arm-linux-gnueabihf-gcc"' >> /home/armuser/.bashrc && \
+    echo 'alias run="qemu-arm -L /usr/arm-linux-gnueabi"' >> /home/armuser/.bashrc && \
+    echo 'alias runhf="qemu-arm -L /usr/arm-linux-gnueabihf"' >> /home/armuser/.bashrc
 
 WORKDIR /work
