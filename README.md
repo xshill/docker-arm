@@ -19,7 +19,7 @@ id -u
 The UID parameter is used to create an internal container user that has the same permissions as your current user.
 
 ## Running
-Use `docker run -it xshill/arm` to launch the container. This will drop
+Use `sudo docker run -it xshill/arm` to launch the container. This will drop
 you in an interactive bash session where you can use the tools. The working directory is `/work`.
 
 ### Using external files
