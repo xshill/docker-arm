@@ -1,7 +1,8 @@
 # docker-arm
 This is a Dockerfile that contains tools to compile, run and debug
 ARM programs. More specifically, it contains the GCC toolchain for ARM,
-gdb-multiarch and qemu.
+gdb-multiarch and qemu. This image is intended to be used as semi-permanent environment
+for running and compiling ARM binaries, rather than for running one-off commands.
 
 ## Building the image
 Use the following command to build the image:
